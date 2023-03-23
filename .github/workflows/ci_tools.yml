@@ -1,0 +1,164 @@
+name: CI Quality Control
+
+# Controls when the action will run. We only want that this action to happens when
+# we open a pull request that points to main or Staging
+on:
+  pull_request:
+    branches:
+      - "main"
+  # This would make this workflow reusable. That is, that any other repo
+  # can easily call and use this workflow in their own repositories.
+  # --------------------------------------------------------------------- #
+  # To use this Workflow, you need to specify this line on your job:      #
+  # uses: valiot/ValueChainOS-Queues/.github/workflows/ci_tools.yml@main  #
+  # --------------------------------------------------------------------- #
+  workflow_call:
+    # Define the inputs if this workflow gets called from another repo
+    inputs:
+      PYTHON_VERSION:
+        description: "Version of Python to install"
+        type: string
+        required: true
+      REPO_FOLDER:
+        description: "Main folder of the project to analyze."
+        type: string
+        required: true
+    # Do the same with the required secrets for the repo
+    secrets:
+      SCHEDULER_KEY:
+        description: "Key to install private repositories"
+        required: true
+
+env:
+  PYTHON_VERSION: '3.10'
+  REPO_FOLDER: valuechainos_queues
+
+# ----------------------------------- #
+#          DEFINE THE JOBS            #
+# ----------------------------------- #
+
+
+jobs:
+  # Linter python
+  linter:
+    name: Lint code 🚨
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - name: Checkout code 🧑‍💻
+        uses: actions/checkout@v3
+
+      # Use the setup action
+      - name: Install python and dependencies 🏗️
+        uses: valiot/ValueChainOS-Queues/.github/actions/setup_python
+        with:
+          python_version: ${{ env.PYTHON_VERSION }}
+          ssh_key: ${{ secrets.SCHEDULER_KEY }}
+
+      # Use the catch Pr files action
+      - name: Obtain files from the PR 🥅 
+        id: files
+        uses: valiot/ValueChainOS-Queues/.github/actions/catch_pr_files
+
+      - name: Run Pylint linter 🚨
+        run: |
+          pipenv run pylint ${{ steps.files.outputs.files }}
+      # If the linter pass
+      - run: echo "The linter pass without problems! ✅"
+
+  # Type checker python
+  type_checker:
+    name: Typing check ✏️
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - name: Checkout code 🧑‍💻
+        uses: actions/checkout@v3
+
+      # Use the setup action
+      - name: Install python and dependencies 🏗️
+        uses: valiot/ValueChainOS-Queues/.github/actions/setup_python
+        with:
+          python_version: ${{ env.PYTHON_VERSION }}
+          ssh_key: ${{ secrets.SCHEDULER_KEY }}
+
+      # Use the catch Pr files action
+      - name: Obtain files from the PR 🥅 
+        id: files
+        uses: valiot/ValueChainOS-Queues/.github/actions/catch_pr_files
+
+      - name: Run static type checker ✏️
+        run: |
+          pipenv run mypy ${{ steps.files.outputs.files }}
+      # If the linter pass
+      - run: echo "The type checker pass without problems! ✅"
+
+  # Job for the Pytest
+  tests:
+    name: Running tests 🧪
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - name: Checkout code 🧑‍💻
+        uses: actions/checkout@v3
+
+      # Use the setup action
+      - name: Install python and dependencies 🏗️ 
+        uses: valiot/ValueChainOS-Queues/.github/actions/setup_python
+        with:
+          python_version: ${{ env.PYTHON_VERSION }}
+          ssh_key: ${{ secrets.SCHEDULER_KEY }}
+
+      # Testing all test and stops if there is one error.
+      - name: Testing with pytest 🧪
+        run: |
+          pipenv run pytest
+      # If the linter pass
+      - run: echo "The tests pass without problems! ✅"
+
+  # Job for the Pytest
+  security:
+    name: Security check 🔒️
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - name: Checkout code 🧑‍💻
+        uses: actions/checkout@v3
+
+      # Use the setup action
+      - name: Install python and dependencies 🏗️ 
+        uses: valiot/ValueChainOS-Queues/.github/actions/setup_python
+        with:
+          python_version: ${{ env.PYTHON_VERSION }}
+          ssh_key: ${{ secrets.SCHEDULER_KEY }}
+
+      # Testing all test and stops if there is one error.
+      - name: Check with Bandit for possible failures 🔒️
+        run: |
+          pipenv run bandit -r ${{ env.REPO_FOLDER }} -c "pyproject.toml"
+      # If the linter pass
+      - run: echo "The security remains as expected! ✅"
+  # Create documentation of the repo
+  build-automatic-documentation:
+    name: Automatic documentation
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Use the main branch protection action
+      - name: Install python and dependencies
+        uses: valiot/ValueChainOS-Queues/.github/actions/documentation
+  # Main branch protection
+  main_branch_protection:
+    name: Main branch protection
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Use the main branch protection action
+      - name: Install python and dependencies
+        uses: valiot/ValueChainOS-Queues/.github/actions/main_branch_protection
