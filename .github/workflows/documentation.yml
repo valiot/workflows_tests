@@ -27,37 +27,37 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install SSH key 🔐
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SCHEDULER_KEY }}
-          name: id_rsa # optional
-          known_hosts: github.com
-          if_key_exists: replace # replace / ignore / fail; optional (defaults to fail)
+      # - name: Install SSH key 🔐
+      #   uses: shimataro/ssh-key-action@v2
+      #   with:
+      #     key: ${{ secrets.SCHEDULER_KEY }}
+      #     name: id_rsa # optional
+      #     known_hosts: github.com
+      #     if_key_exists: replace # replace / ignore / fail; optional (defaults to fail)
 
-      - name: Install Python, pipenv and Pipfile packages 🏗️
-        uses: palewire/install-python-pipenv-pipfile@v2
-        with:
-          python-version: 3.8
+      # - name: Install Python, pipenv and Pipfile packages 🏗️
+      #   uses: palewire/install-python-pipenv-pipfile@v2
+      #   with:
+      #     python-version: 3.8
 
-      # Testing all test and stops if there is one error. Also, build the htmlcov
-      - name: Testing with pytest 🧪 
-        id: test
-        run: |
-          pipenv run python -m pytest --cov=$REPO_FOLDER --cov-report=html
+      # # Testing all test and stops if there is one error. Also, build the htmlcov
+      # - name: Testing with pytest 🧪 
+      #   id: test
+      #   run: |
+      #     pipenv run python -m pytest --cov=$REPO_FOLDER --cov-report=html
       
-      # Now, with Python install all the needed libraries for MKdocs
-      - name: Setup MkDocs environment 📌
-        run: |
-          pipenv run pip install -r .github/utilities/docs_requirements.txt
-      # Build the docs folder
-      - name: Build documentation 📝 
-        env:
-          REPO: ${{ github.event.repository.name }}
-          REPO_FOLDER: $REPO_FOLDER
-        run: |
-          pipenv run python .github/utilities/automatic_documentation.py
-      - name: Deploy 🚀
-        run: |
-          mkdocs gh-deploy
+      # # Now, with Python install all the needed libraries for MKdocs
+      # - name: Setup MkDocs environment 📌
+      #   run: |
+      #     pipenv run pip install -r .github/utilities/docs_requirements.txt
+      # # Build the docs folder
+      # - name: Build documentation 📝 
+      #   env:
+      #     REPO: ${{ github.event.repository.name }}
+      #     REPO_FOLDER: $REPO_FOLDER
+      #   run: |
+      #     pipenv run python .github/utilities/automatic_documentation.py
+      # - name: Deploy 🚀
+      #   run: |
+      #     mkdocs gh-deploy
           
