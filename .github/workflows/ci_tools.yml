@@ -52,7 +52,7 @@ jobs:
       - name: Install python and dependencies 🏗️
         uses: valiot/workflows_tests/.github/actions/setup_python@main
         with:
-          python_version: ${{ env.PYTHON_VERSION }}
+          python_version: ${{ inputs.PYTHON_VERSION }}
           ssh_key: ${{ secrets.SCHEDULER_KEY }}
 
       # Use the catch Pr files action
