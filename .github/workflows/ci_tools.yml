@@ -31,7 +31,7 @@ on:
 
 env:
   PYTHON_VERSION: '3.10'
-  REPO_FOLDER: valuechainos_queues
+  REPO_FOLDER: workflows_tests
 
 # ----------------------------------- #
 #          DEFINE THE JOBS            #
@@ -50,7 +50,7 @@ jobs:
 
       # Use the setup action
       - name: Install python and dependencies 🏗️
-        uses: valiot/ValueChainOS-Queues/.github/actions/setup_python
+        uses: valiot/workflows_tests/.github/actions/setup_python
         with:
           python_version: ${{ env.PYTHON_VERSION }}
           ssh_key: ${{ secrets.SCHEDULER_KEY }}
@@ -58,7 +58,7 @@ jobs:
       # Use the catch Pr files action
       - name: Obtain files from the PR 🥅 
         id: files
-        uses: valiot/ValueChainOS-Queues/.github/actions/catch_pr_files
+        uses: valiot/workflows_tests/.github/actions/catch_pr_files
 
       - name: Run Pylint linter 🚨
         run: |
@@ -77,7 +77,7 @@ jobs:
 
       # Use the setup action
       - name: Install python and dependencies 🏗️
-        uses: valiot/ValueChainOS-Queues/.github/actions/setup_python
+        uses: valiot/workflows_tests/.github/actions/setup_python
         with:
           python_version: ${{ env.PYTHON_VERSION }}
           ssh_key: ${{ secrets.SCHEDULER_KEY }}
@@ -85,7 +85,7 @@ jobs:
       # Use the catch Pr files action
       - name: Obtain files from the PR 🥅 
         id: files
-        uses: valiot/ValueChainOS-Queues/.github/actions/catch_pr_files
+        uses: valiot/workflows_tests/.github/actions/catch_pr_files
 
       - name: Run static type checker ✏️
         run: |
@@ -104,7 +104,7 @@ jobs:
 
       # Use the setup action
       - name: Install python and dependencies 🏗️ 
-        uses: valiot/ValueChainOS-Queues/.github/actions/setup_python
+        uses: valiot/workflows_tests/.github/actions/setup_python
         with:
           python_version: ${{ env.PYTHON_VERSION }}
           ssh_key: ${{ secrets.SCHEDULER_KEY }}
@@ -127,7 +127,7 @@ jobs:
 
       # Use the setup action
       - name: Install python and dependencies 🏗️ 
-        uses: valiot/ValueChainOS-Queues/.github/actions/setup_python
+        uses: valiot/workflows_tests/.github/actions/setup_python
         with:
           python_version: ${{ env.PYTHON_VERSION }}
           ssh_key: ${{ secrets.SCHEDULER_KEY }}
@@ -150,5 +150,5 @@ jobs:
 
       # Use the main branch protection action
       - name: Install python and dependencies
-        uses: valiot/ValueChainOS-Queues/.github/workflows/main_branch_protection.yml
+        uses: valiot/workflows_tests/.github/workflows/main_branch_protection.yml
         secrets: inherit
