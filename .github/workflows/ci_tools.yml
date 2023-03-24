@@ -150,5 +150,5 @@ jobs:
 
       # Use the main branch protection action
       - name: Install python and dependencies
-        uses: valiot/workflows_tests/.github/workflows/main_branch_protection.yml
+        uses: valiot/workflows_tests/.github/workflows/main_branch_protection.yml@main
         secrets: inherit
