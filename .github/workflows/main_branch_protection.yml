@@ -37,7 +37,7 @@ jobs:
       # If the branch is not protected, then...
       - name: Comment on PR 🔊
         if: ${{steps.check_head_ref.outputs.main_protected}} == "false"
-        uses: valiot/ValueChainOS-Queues/.github/actions/comment_on_pr
+        uses: valiot/workflows_tests/.github/actions/comment_on_pr
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           filename: ".github/utilities/pull_request_from_staging.md"
