@@ -1,3 +1,5 @@
+# Bandit requires pyproject.toml
+
 name: CI Quality Control
 
 # Controls when the action will run. We only want that this action to happens when
