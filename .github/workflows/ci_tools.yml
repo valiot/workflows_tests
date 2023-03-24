@@ -29,9 +29,9 @@ on:
         description: "Key to install private repositories"
         required: true
 
-env:
-  PYTHON_VERSION: '3.10'
-  REPO_FOLDER: workflows_tests
+# env:
+#   PYTHON_VERSION: '3.10'
+#   REPO_FOLDER: workflows_tests
 
 # ----------------------------------- #
 #          DEFINE THE JOBS            #
