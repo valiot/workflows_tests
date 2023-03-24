@@ -23,11 +23,11 @@ on:
         description: "Main folder of the project to analyze."
         type: string
         required: true
-    # # Do the same with the required secrets for the repo
-    # secrets:
-    #   SCHEDULER_KEY:
-    #     description: "Key to install private repositories"
-    #     required: true
+    # Do the same with the required secrets for the repo
+    secrets:
+      SCHEDULER_KEY:
+        description: "Key to install private repositories"
+        required: true
 
 env:
   PYTHON_VERSION: '3.10'
