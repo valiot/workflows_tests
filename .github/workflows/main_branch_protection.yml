@@ -11,10 +11,10 @@ on:
   # workflow_call but there's no need to add anything else
   workflow_call:
     # Obtain the required secrets for the repo
-    secrets:
-      GITHUB_TOKEN:
-        description: "Github token to access and perform operations with the token"
-        required: true
+    # secrets:
+    #   GITHUB_TOKEN:
+    #     description: "Github token to access and perform operations with the token"
+    #     required: true
 
 jobs:
   main_protection:
@@ -38,6 +38,7 @@ jobs:
       - name: Comment on PR 🔊
         if: ${{steps.check_head_ref.outputs.main_protected}} == "false"
         uses: valiot/workflows_tests/.github/actions/comment_on_pr@main
+        secrets: inherit
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           filename: ".github/utilities/pull_request_from_staging.md"
