@@ -75,23 +75,23 @@ jobs:
       - name: Checkout code 🧑‍💻
         uses: actions/checkout@v3
 
-      # # Use the setup action
-      # - name: Install python and dependencies 🏗️
-      #   uses: valiot/workflows_tests/.github/actions/setup_python@main
-      #   with:
-      #     python_version: ${{ env.PYTHON_VERSION }}
-      #     ssh_key: ${{ secrets.SCHEDULER_KEY }}
+      # Use the setup action
+      - name: Install python and dependencies 🏗️
+        uses: valiot/workflows_tests/.github/actions/setup_python@main
+        with:
+          python_version: ${{ env.PYTHON_VERSION }}
+          ssh_key: ${{ secrets.SCHEDULER_KEY }}
 
-      # # Use the catch Pr files action
-      # - name: Obtain files from the PR 🥅 
-      #   id: files
-      #   uses: valiot/workflows_tests/.github/actions/catch_pr_files@main
+      # Use the catch Pr files action
+      - name: Obtain files from the PR 🥅 
+        id: files
+        uses: valiot/workflows_tests/.github/actions/catch_pr_files@main
 
-      # - name: Run static type checker ✏️
-      #   run: |
-      #     pipenv run pyright ${{ steps.files.outputs.files }}
-      # # If the linter pass
-      # - run: echo "The type checker pass without problems! ✅"
+      - name: Run static type checker ✏️
+        run: |
+          pipenv run pyright ${{ steps.files.outputs.files }}
+      # If the linter pass
+      - run: echo "The type checker pass without problems! ✅"
 
   # Job for the Pytest
   tests:
