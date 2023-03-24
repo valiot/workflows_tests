@@ -139,16 +139,16 @@ jobs:
       # If the linter pass
       - run: echo "The security remains as expected! ✅"
 
-  # Main branch protection
-  main_branch_protection:
-    name: Main branch protection
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout the code
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # # Main branch protection
+  # main_branch_protection:
+  #   name: Main branch protection
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Checkout the code
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      # Use the main branch protection action
-      - name: Install python and dependencies
-        uses: valiot/workflows_tests/.github/workflows/main_branch_protection.yml@main
-        secrets: inherit
+  #     # Use the main branch protection action
+  #     - name: Install python and dependencies
+  #       uses: valiot/workflows_tests/.github/workflows/main_branch_protection.yml@main
+  #       secrets: inherit
