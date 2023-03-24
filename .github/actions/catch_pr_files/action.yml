@@ -1,0 +1,25 @@
+name: Catch PR files 📝 
+description: This action obtain the PR files from the given commits
+
+# Define the output
+outputs:
+  files:
+    description: Files with changes (those that are the one in the PR)
+    value: ${{ steps.pr_files.outputs.files }}
+
+# Define the steps
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Get files with changes (files from the PR) 📝
+      id: pr_files
+      shell: bash
+      run: |
+        echo "files=$(git --no-pager diff --name-only -r --diff-filter=AMR FETCH_HEAD $(git merge-base FETCH_HEAD ${{ github.base_ref }}) -- '*.py')" | tr '\n' ' ' >> $GITHUB_OUTPUT
+
+    - run: echo "Files from the PR were obtained 🥅."
+      shell: bash

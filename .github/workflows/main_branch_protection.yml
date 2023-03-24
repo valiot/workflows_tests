@@ -1,0 +1,49 @@
+name: Main Branch Protection 🔒️
+
+# It protects main for any PR that should be passing through Staging
+# that is pointing to the main branch.
+on:
+  pull_request:
+    branches: 
+      - "main"
+
+  # We'd create this as a reusable workflow. We'd only add the key of
+  # workflow_call but there's no need to add anything else
+  workflow_call:
+    # Obtain the required secrets for the repo
+    secrets:
+      GITHUB_TOKEN:
+        description: "Github token to access and perform operations with the token"
+        required: true
+
+jobs:
+  main_protection:
+    name: Main Branch Protection 🔒️
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check head reference for PR 🦺
+        id: check_head_ref
+        run: |
+          if ${{ github.head_ref != Staging }}; then
+            echo "::set-env name=main_protected::false"
+          else
+            echo "::set-env name=main_protected::true"
+          fi
+      - name: Main branch protected ✅
+        if: ${{steps.check_head_ref.outputs.main_protected}} == "true"
+        run: |
+          echo "Pull requests is fine and can pass through"
+          exit 0
+      # If the branch is not protected, then...
+      - name: Comment on PR 🔊
+        if: ${{steps.check_head_ref.outputs.main_protected}} == "false"
+        uses: valiot/ValueChainOS-Queues/.github/actions/comment_on_pr
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          filename: ".github/utilities/pull_request_from_staging.md"
+      
+      - name: Main branch not protected 🚨 
+        if: ${{steps.check_head_ref.outputs.main_protected}} == "false"
+        run: |
+          echo "Pull Request to main must be from Staging"
+          exit 1

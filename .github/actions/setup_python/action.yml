@@ -1,0 +1,41 @@
+name: Install Python and dependencies 🏗️
+description: This action would install Python, install Pipenv and cache all the dependencies
+
+# Define the inputs needed for the action
+inputs:
+  python_version:
+    description: Python version to install
+    required: true
+  ssh_key:
+    description: SSH key to install private dependencies
+    required: true
+
+# Define the steps
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: Install SSH key 🔐
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ inputs.ssh_key }}
+        name: id_rsa # optional
+        known_hosts: github.com
+        if_key_exists: replace # replace / ignore / fail; optional (defaults to fail)
+
+    - name: Install Python 🐍
+      uses: actions/setup-python@v4
+      id: pipenv
+      with:
+        python-version: ${{ inputs.python_version }}
+        cache: 'pipenv'
+
+    - name: Install pipenv and Pipfile packages 🏗️
+      shell: bash
+      run: |
+        curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+        pipenv install --dev
+
+    - run: echo "Python ${{ inputs.python_version }} installed correctly 🎉"
+      shell: bash
