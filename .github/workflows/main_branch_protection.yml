@@ -24,27 +24,14 @@ jobs:
       - name: Check head reference for PR 🦺
         id: check_head_ref
         run: |
-          if ${{ github.head_ref != Staging }}; then
-            echo "::set-env name=main_protected::false"
-          else
-            echo "::set-env name=main_protected::true"
+          if ${{ github.head_ref != 'Staging' }}; then
+            echo "This is not Staging, can't merge"
+            exit 1
           fi
-      - name: Main branch protected ✅
-        if: ${{steps.check_head_ref.outputs.main_protected}} == "true"
-        run: |
-          echo "Pull requests is fine and can pass through"
-          exit 0
-      # If the branch is not protected, then...
-      - name: Comment on PR 🔊
-        if: ${{steps.check_head_ref.outputs.main_protected}} == "false"
-        uses: valiot/workflows_tests/.github/actions/comment_on_pr@main
-        secrets: inherit
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          filename: ".github/utilities/pull_request_from_staging.md"
-      
-      - name: Main branch not protected 🚨 
-        if: ${{steps.check_head_ref.outputs.main_protected}} == "false"
-        run: |
-          echo "Pull Request to main must be from Staging"
-          exit 1
+#       # If the branch is not protected, then...
+#       - name: Comment on PR 🔊
+#         uses: valiot/workflows_tests/.github/actions/comment_on_pr@main
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           filename: ".github/utilities/pull_request_from_staging.md"
+# #${GITHUB_REF_NAME}
