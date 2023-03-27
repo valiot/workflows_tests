@@ -16,7 +16,7 @@ on:
 
 # Define the repo folder variable here
 env:
-  REPO_FOLDER: ${GITHUB_REF_NAME}
+  REPO_FOLDER: ${{github.head_ref}}
 
 jobs:
   # Job for the Pytest
